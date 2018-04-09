@@ -1,46 +1,22 @@
-# Hugo Noriega
-# 14097
-
 from readData import *
+from probabilities import *
+from bestK import *
+import random
 
-# separar ham y spam
-hamC, spamC, hamArray, spamArray = messageOrganizer('test_corpus.txt')
-print('hams: ', hamC, '\nspams: ', spamC)
+hamArray, spamArray = messageOrganizer('test_corpus.txt')
+shuffle_save(hamArray, 'ham', True)
+shuffle_save(spamArray, 'spam', True)
 
-# guardar nuevos txt con ham y spam
-shuffle_save(hamArray, 'ham')
-shuffle_save(spamArray, 'spam')
-
-# dividir data en distintos parametros
-hTrainig, hCross, hTst = dataSeparator(hamC, hamArray)
-sTraining, sCross, sTst = dataSeparator(spamC, spamArray)
-
-messSpam = len(hTrainig)
-messHam = len(sTraining)
-totalMes = messSpam + messHam
-
-# guarda txt para hacer tests
-shuffle_save(hTst, 'test', sTst)
-
-# creacion de diccionarios de palabras
-hamD = createDictionary2(hTrainig)
-spamD = createDictionary2(sTraining)
-
-# tamano de los diccionarios
-hamWords = len(hamD)
-spamWords = len(spamD)
-
-# todas las palabras en ham y spam
-hamAllWords = sum(hamD.values())
-spamAllWord = sum(spamD.values())
-
-# todas las palabras distintas
-allWords = addDictionaries(hamD, spamD)
-numberOfWords = len(allWords)
-
+th, ch, tsh = dataSeparator(len(hamArray), hamArray)
+ts, cs, tss = dataSeparator(len(spamArray), spamArray)
+csh = ch + cs
+shuffle_save(tsh, 'test', False, tss)
+dspam = createDictionary(ts)
+dham = createDictionary(th)
+allTm = len(th) + len(ts)
 k = 1
-
-isSpam = psh(messSpam, totalMes, k)
-isHam = psh(messHam, totalMes, k)
-
-
+isSpam = psh(len(ts), allTm, k)
+isHam = psh(len(th), allTm, k)
+newk = findK(k, 0.1, 1000, csh, dham, dspam, isHam, isSpam)
+filename = 'test.txt'
+analizeDoc(filename, dham, dspam, isHam, isSpam, newk)
