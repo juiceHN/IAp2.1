@@ -18,5 +18,5 @@ k = 1
 isSpam = psh(len(ts), allTm, k)
 isHam = psh(len(th), allTm, k)
 newk = findK(k, 0.1, 1000, csh, dham, dspam, isHam, isSpam)
-filename = 'test.txt'
+filename = 'test_sms.txt'
 analizeDoc(filename, dham, dspam, isHam, isSpam, newk)
